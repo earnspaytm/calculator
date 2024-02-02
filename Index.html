@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #calculator {
+            width: 500px;
+            height: 800px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        #output {
+            padding: 10px;
+            font-size: 24px;
+            text-align: right;
+            border-bottom: 1px solid #ccc;
+            height: 80px;
+        }
+
+        #buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button.operator {
+            background-color: #f8f8f8;
+        }
+
+        button.double {
+            grid-column: span 2;
+        }
+
+        button.double-zero {
+            grid-column: span 2;
+        }
+
+        button:active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<div id="calculator">
+    <div id="output">0</div>
+    <div id="buttons">
+        <button onclick="clearOutput()">C</button>
+        <button onclick="toggleSign()">+/-</button>
+        <button onclick="calculatePercentage()">%</button>
+        <button class="operator" onclick="setOperator('/')">/</button>
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="setOperator('*')">*</button>
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="setOperator('-')">-</button>
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="setOperator('+')">+</button>
+        <button class="double" onclick="appendNumber('0')">0</button>
+        <button onclick="appendDecimal('.')">.</button>
+        <button class="operator double" onclick="calculateResult()">=</button>
+    </div>
+</div>
+
+<script>
+    let currentInput = '';
+    let currentOperator = '';
+    let previousInput = '';
+
+    function clearOutput() {
+        currentInput = '';
+        currentOperator = '';
+        previousInput = '';
+        updateOutput();
+    }
+
+    function toggleSign() {
+        if (currentInput !== '') {
+            currentInput = (parseFloat(currentInput) * -1).toString();
+            updateOutput();
+        }
+    }
+
+    function calculatePercentage() {
+        if (currentInput !== '') {
+            currentInput = (parseFloat(currentInput) / 100).toString();
+            updateOutput();
+        }
+    }
+
+    function appendNumber(number) {
+        currentInput += number;
+        updateOutput();
+    }
+
+    function appendDecimal() {
+        if (!currentInput.includes('.')) {
+            currentInput += '.';
+            updateOutput();
+        }
+    }
+
+    function setOperator(operator) {
+        if (currentInput !== '') {
+            currentOperator = operator;
+            previousInput = currentInput;
+            currentInput = '';
+            updateOutput();
+        }
+    }
+
+    function calculateResult() {
+        if (currentInput !== '' && previousInput !== '' && currentOperator !== '') {
+            const num1 = parseFloat(previousInput);
+            const num2 = parseFloat(currentInput);
+
+            switch (currentOperator) {
+                case '+':
+                    currentInput = (num1 + num2).toString();
+                    break;
+                case '-':
+                    currentInput = (num1 - num2).toString();
+                    break;
+                case '*':
+                    currentInput = (num1 * num2).toString();
+                    break;
+                case '/':
+                    currentInput = (num1 / num2).toString();
+                    break;
+            }
+
+            currentOperator = '';
+            previousInput = '';
+            updateOutput();
+        }
+    }
+
+    function updateOutput() {
+        document.getElementById('output').innerText = currentInput || '0';
+    }
+</script>
+
+</body>
+</html>
